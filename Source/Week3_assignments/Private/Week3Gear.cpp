@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Week3Gear.h"
@@ -11,11 +11,11 @@ AWeek3Gear::AWeek3Gear()
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
 	SetRootComponent(SceneRoot);
 
-	// Static Mesh Component∏¶ ª˝º∫«œ∞Ì Scene Componentø° Attach
+	// Static Mesh ComponentÎ•º ÏÉùÏÑ±ÌïòÍ≥† Scene ComponentÏóê Attach
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMeshComp->SetupAttachment(SceneRoot);
 
-	RotationSpeed = FRotator(0.0f, 90.0f, 0.0f);
+	RotationSpeed = FRotator(90.0f, 0.0f, 0.0f);
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +31,16 @@ void AWeek3Gear::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	UpdateRotation(DeltaTime);
+}
+
+void AWeek3Gear::SetGearRotation(FRotator NewRotation)
+{
+	RotationSpeed = NewRotation;
+}
+
+FRotator AWeek3Gear::GetGearRotation()
+{
+	return RotationSpeed;
 }
 
 void AWeek3Gear::UpdateRotation(float DeltaTime)
