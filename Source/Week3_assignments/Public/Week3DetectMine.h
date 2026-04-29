@@ -34,7 +34,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// 1. 컴포넌트 구성 (발판 삭제, 지뢰와 범위만 남김)
+	// 컴포넌트 구성
 	UPROPERTY(VisibleAnywhere, Category = "Mine|Components")
 	USceneComponent* SceneRoot;
 
@@ -44,22 +44,25 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Mine|Components")
 	class USphereComponent* TriggerSphere; // 감지 및 폭발 범위
 
-	// 2. 지뢰 설정값
+	UPROPERTY(VisibleAnywhere, Category = "Mine|Components")
+	UStaticMeshComponent* RangeIndicator;
+
+	// 설정값
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mine|Settings")
 	FMineTrapSettings Settings;
 
-	// 3. 상태 관리
-	bool bIsTriggered; // 중복 폭발 방지 락
+	// 상태 관리
+	bool bIsTriggered; 
 	FTimerHandle ExplosionTimerHandle;
 
-	// 4. 이벤트 함수
+	// 이벤트 함수
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void Explode();
 
 public:	
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 };

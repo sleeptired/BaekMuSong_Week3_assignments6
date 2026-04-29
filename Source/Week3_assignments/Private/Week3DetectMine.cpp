@@ -21,6 +21,10 @@ AWeek3DetectMine::AWeek3DetectMine()
 	TriggerSphere = CreateDefaultSubobject<USphereComponent>(TEXT("TriggerSphere"));
 	TriggerSphere->SetupAttachment(SceneRoot);
 
+	RangeIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RangeIndicator"));
+	RangeIndicator->SetupAttachment(SceneRoot);
+	RangeIndicator->SetCollisionEnabled(ECollisionEnabled::NoCollision); 
+
 	bIsTriggered = false;
 
 	// 생성 시 기본 크기 세팅
@@ -47,6 +51,14 @@ void AWeek3DetectMine::BeginPlay()
 	Super::BeginPlay();
 
 	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeek3DetectMine::OnOverlapBegin);
+
+	if (RangeIndicator)
+	{
+		RangeIndicator->SetVisibility(false); // 안보이게 설정
+
+		float Scale = Settings.ExplosionRadius / 50.0f; 
+		RangeIndicator->SetWorldScale3D(FVector(Scale, Scale, Scale));
+	}
 }
 
 void AWeek3DetectMine::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -55,8 +67,13 @@ void AWeek3DetectMine::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 	{
 		bIsTriggered = true;
 
-		// Settings 안에 있는 값을 꺼내 씁니다.
 		UE_LOG(LogTemp, Warning, TEXT("[지뢰 작동] 범위 내 침입 감지! %f초 뒤 폭발!"), Settings.ExplosionDelay);
+
+		//범위안에 들어오면 시야범위 보여주는 코드
+		if (RangeIndicator)
+		{
+			RangeIndicator->SetVisibility(true);
+		}
 
 		GetWorld()->GetTimerManager().SetTimer(ExplosionTimerHandle, this, &AWeek3DetectMine::Explode, Settings.ExplosionDelay, false);
 	}
